@@ -1,7 +1,6 @@
 ﻿using System;
 using DG.Tweening;
 using UnityEngine;
-using TMPro;
 
 public class UIButton : MonoBehaviour {
 
@@ -9,21 +8,8 @@ public class UIButton : MonoBehaviour {
     [SerializeField] private float _tweenDuration;
     [SerializeField] private Vector3 _defaultScale;
     
-    public Sprite regular;
-    public Sprite mouseOver;
-    public Sprite mouseClicked;
-    public TextMeshPro buttonText;
     public Action OnButtonClicked;
-    // Use this for initialization
-    void Start () {
-
-    }
-
-    // Update is called once per frame
-    void Update () {
-
-    }
-
+    
     private void OnMouseDown()
     {
         Debug.Log("OnMouseDown");
