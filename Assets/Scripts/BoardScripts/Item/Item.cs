@@ -14,7 +14,10 @@ public class Item : MonoBehaviour
     private Vector2 _finalTouchPosition;
     private float _swipeAngle = 0;
     private Vector2 _tempPosition;
+    private bool _isMatch;
+    public bool IsMatch => _isMatch;
     public Action<Item> OnItemMoved;
+    
     private void Start()
     {
         _grid = FindObjectOfType<Grid>();
@@ -76,24 +79,40 @@ public class Item : MonoBehaviour
     {
         _swipeAngle = Mathf.Atan2(_finalTouchPosition.y - _firstTouchPosition.y,
             _finalTouchPosition.x - _firstTouchPosition.x) * 180/Mathf.PI;
-        MoveItem();
-        OnItemMoved?.Invoke(this);
+        
+        if (TryMoveItem())
+        {
+            OnItemMoved?.Invoke(this);
+        }
+       
     }
 
-    private void MoveItem()
+    private bool TryMoveItem()
     {
         Item otherItem = null;
-        if (_swipeAngle > -45f && _swipeAngle <= 45f && Column < _grid.Width)
+        if (_swipeAngle == 0)
+        {
+            return false;
+        }
+        if (_swipeAngle > -45f && _swipeAngle <= 45f && Column+1< _grid.Width)
         {
             //Right Swipe
             otherItem = _grid.AllItems[Column + 1, Row];
+            if (otherItem==null)
+            {
+                return false;
+            }
             otherItem.Column -= 1;
             Column += 1;
         }
-        else if (_swipeAngle > 45f && _swipeAngle <= 135f &&  Row < _grid.Height)
+        else if (_swipeAngle > 45f && _swipeAngle <= 135f &&  Row+1 < _grid.Height)
         {
             //Up Swipe
             otherItem = _grid.AllItems[Column, Row+1];
+            if (otherItem==null)
+            {
+                return false;
+            }
             otherItem.Row -= 1;
             Row += 1;
         }
@@ -101,6 +120,10 @@ public class Item : MonoBehaviour
         {
             //Left Swipe
             otherItem = _grid.AllItems[Column - 1, Row];
+            if (otherItem==null)
+            {
+                return false;
+            }
             otherItem.Column += 1;
             Column -= 1;
         }
@@ -108,6 +131,10 @@ public class Item : MonoBehaviour
         {
             //Down Swipe
             otherItem = _grid.AllItems[Column, Row-1];
+            if (otherItem==null)
+            {
+                return false;
+            }
             otherItem.Row += 1;
             Row -= 1;
         }
@@ -117,67 +144,18 @@ public class Item : MonoBehaviour
             (transform.parent, otherItem.transform.parent) = (otherItem.transform.parent, transform.parent);
             _grid.AllItems[Column, Row] = this;
             _grid.AllItems[otherItem.Column, otherItem.Row] = otherItem;
+            return true;
         }
-       
+
+        return false;
     }
 
 
     public void DisableItem()
     {
         Instantiate(_disableItem,transform.parent.position,Quaternion.identity,transform.parent);
+        _isMatch = true;
         Destroy(this.gameObject);
     }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     
 }

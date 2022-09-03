@@ -40,7 +40,7 @@ public class Grid : MonoBehaviour
         {
             for (int j = 0; j < Height; j++)
             {
-                _allItems[i, j].GetComponent<Item>().OnItemMoved += OnItemMoved;
+                _allItems[i, j].OnItemMoved += OnItemMoved;
             }
         }
     }
@@ -52,7 +52,7 @@ public class Grid : MonoBehaviour
             {
                 if (_allItems[i, j] != null)
                 {
-                    _allItems[i, j].GetComponent<Item>().OnItemMoved -= OnItemMoved;
+                    _allItems[i, j].OnItemMoved -= OnItemMoved;
                 }
             }
         }
@@ -60,15 +60,15 @@ public class Grid : MonoBehaviour
 
     private void OnItemMoved(Item item)
     {
-        EItem itemType = item.GetComponent<Item>().ItemType;
-        int row = item.GetComponent<Item>().Row;
+        EItem itemType = item.ItemType;
+        int row = item.Row;
         if(CheckRowMatch(itemType, row))
         {
-            OnRowMatched?.Invoke(itemType,row);
             for (int i = 0; i < Width; i++)
             {
                 _allItems[i, row].DisableItem();
             }
+            OnRowMatched?.Invoke(itemType,row);
             Debug.Log(row+".ROW ESLESTI ---"+ "Item tipi ---" + itemType );
         }
     }
