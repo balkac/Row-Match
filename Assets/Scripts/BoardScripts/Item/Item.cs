@@ -1,8 +1,10 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class Item : MonoBehaviour
 {
     public EItem ItemType;
+    public GameObject _disableItem;
     public int Column;
     public int Row;
     public int TargetX;
@@ -12,6 +14,7 @@ public class Item : MonoBehaviour
     private Vector2 _finalTouchPosition;
     private float _swipeAngle = 0;
     private Vector2 _tempPosition;
+    public Action<Item> OnItemMoved;
     private void Start()
     {
         _grid = FindObjectOfType<Grid>();
@@ -32,6 +35,7 @@ public class Item : MonoBehaviour
             _tempPosition = new Vector2(TargetX, transform.position.y);
             transform.position = Vector2.Lerp(transform.position, _tempPosition,
                 0.1f);
+            OnItemMoved?.Invoke(this);
         }
         else
         {
@@ -39,6 +43,7 @@ public class Item : MonoBehaviour
             _tempPosition = new Vector2(TargetX, transform.position.y);
             transform.position = _tempPosition;
             _grid.AllItems[Column, Row] = gameObject;
+            
         }
 
         if (Mathf.Abs(TargetY - transform.position.y) > .01f)
@@ -47,6 +52,7 @@ public class Item : MonoBehaviour
             _tempPosition = new Vector2(transform.position.x, TargetY);
             transform.position = Vector2.Lerp(transform.position, _tempPosition, 
                 0.1f);
+            OnItemMoved?.Invoke(this);
         }
         else
         {
@@ -84,6 +90,7 @@ public class Item : MonoBehaviour
         {
             //Right Swipe
             GameObject otherItem = _grid.AllItems[Column + 1, Row];
+            (transform.parent, otherItem.transform.parent) = (otherItem.transform.parent, transform.parent);
             otherItem.GetComponent<Item>().Column -= 1;
             Column += 1;
         }
@@ -91,6 +98,7 @@ public class Item : MonoBehaviour
         {
             //Up Swipe
             GameObject otherItem = _grid.AllItems[Column, Row+1];
+            (transform.parent, otherItem.transform.parent) = (otherItem.transform.parent, transform.parent);
             otherItem.GetComponent<Item>().Row -= 1;
             Row += 1;
         }
@@ -98,6 +106,7 @@ public class Item : MonoBehaviour
         {
             //Left Swipe
             GameObject otherItem = _grid.AllItems[Column - 1, Row];
+            (transform.parent, otherItem.transform.parent) = (otherItem.transform.parent, transform.parent);
             otherItem.GetComponent<Item>().Column += 1;
             Column -= 1;
         }
@@ -105,13 +114,18 @@ public class Item : MonoBehaviour
         {
             //Down Swipe
             GameObject otherItem = _grid.AllItems[Column, Row-1];
+            (transform.parent, otherItem.transform.parent) = (otherItem.transform.parent, transform.parent);
             otherItem.GetComponent<Item>().Row += 1;
             Row -= 1;
         }
     }
-    
-    
-    
+
+
+    public void DisableItem()
+    {
+        Instantiate(_disableItem,transform.parent.position,Quaternion.identity,transform.parent);
+        Destroy(this.gameObject);
+    }
     
     
     

@@ -96,6 +96,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ItemType: 1
+  _disableItem: {fileID: 4936003776666311773, guid: 7e83045a420d0964cab0be46fcd46183,
+    type: 3}
   Column: 0
   Row: 0
   TargetX: 0
