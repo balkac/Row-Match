@@ -11,16 +11,15 @@ public class Grid : MonoBehaviour
     public GameObject TilePrefab;
     public Transform TileContainer;
     private Tile[,] _allTiles;
-    private GameObject[,] _allItems;
-
+    private Item[,] _allItems;
     public Tile[,] AllTiles => _allTiles;
-    public GameObject[,] AllItems => _allItems;
-
+    public Item[,] AllItems => _allItems;
     public Action<EItem,int> OnRowMatched;
+    public Action OnGridInitialized;
     void Start()
     {
         _allTiles = new Tile[Width, Height];
-        _allItems = new GameObject[Width, Height];
+        _allItems = new Item[Width, Height];
         Init();
         SubscribeToEvents();
     }
@@ -45,7 +44,7 @@ public class Grid : MonoBehaviour
             OnRowMatched?.Invoke(itemType,row);
             for (int i = 0; i < Width; i++)
             {
-                _allItems[i, row].GetComponent<Item>().DisableItem();
+                _allItems[i, row].DisableItem();
             }
             Debug.Log(row+".ROW ESLESTI ---"+ "Item tipi ---" + itemType );
         }
@@ -87,11 +86,11 @@ public class Grid : MonoBehaviour
                     position, Quaternion.identity,transform);
                 item.transform.parent = backGroundTile.transform;
                 item.name = item.GetComponent<Item>().ItemType + "";
-                _allItems[i, j] = item;
+                _allItems[i, j] = item.GetComponent<Item>();
             }
         }
-
         TileContainer.position = transform.position;
+        OnGridInitialized?.Invoke();
     }
 
     
@@ -99,7 +98,7 @@ public class Grid : MonoBehaviour
     {
         for (int i = 0; i < Width; i++)
         {
-            if (_allItems[i, row].GetComponent<Item>().ItemType != itemType)
+            if (_allItems[i, row].ItemType != itemType)
             {
                 return false;
             }

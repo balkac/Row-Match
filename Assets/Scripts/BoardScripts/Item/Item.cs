@@ -28,22 +28,19 @@ public class Item : MonoBehaviour
     {
         TargetX = Column;
         TargetY = Row;
-
+        
         if (Mathf.Abs(TargetX - transform.position.x) > .01f)
         {
             //Move Toward the target
             _tempPosition = new Vector2(TargetX, transform.position.y);
             transform.position = Vector2.Lerp(transform.position, _tempPosition,
                 0.1f);
-            OnItemMoved?.Invoke(this);
         }
         else
         {
             //Directly set Position
             _tempPosition = new Vector2(TargetX, transform.position.y);
             transform.position = _tempPosition;
-            _grid.AllItems[Column, Row] = gameObject;
-            
         }
 
         if (Mathf.Abs(TargetY - transform.position.y) > .01f)
@@ -52,14 +49,12 @@ public class Item : MonoBehaviour
             _tempPosition = new Vector2(transform.position.x, TargetY);
             transform.position = Vector2.Lerp(transform.position, _tempPosition, 
                 0.1f);
-            OnItemMoved?.Invoke(this);
         }
         else
         {
             //Directly set Position
             _tempPosition = new Vector2(transform.position.x, TargetY);
             transform.position = _tempPosition;
-            _grid.AllItems[Column, Row] = gameObject;
         }
         
     }
@@ -82,42 +77,48 @@ public class Item : MonoBehaviour
         _swipeAngle = Mathf.Atan2(_finalTouchPosition.y - _firstTouchPosition.y,
             _finalTouchPosition.x - _firstTouchPosition.x) * 180/Mathf.PI;
         MoveItem();
+        OnItemMoved?.Invoke(this);
     }
 
     private void MoveItem()
     {
+        Item otherItem = null;
         if (_swipeAngle > -45f && _swipeAngle <= 45f && Column < _grid.Width)
         {
             //Right Swipe
-            GameObject otherItem = _grid.AllItems[Column + 1, Row];
-            (transform.parent, otherItem.transform.parent) = (otherItem.transform.parent, transform.parent);
-            otherItem.GetComponent<Item>().Column -= 1;
+            otherItem = _grid.AllItems[Column + 1, Row];
+            otherItem.Column -= 1;
             Column += 1;
         }
         else if (_swipeAngle > 45f && _swipeAngle <= 135f &&  Row < _grid.Height)
         {
             //Up Swipe
-            GameObject otherItem = _grid.AllItems[Column, Row+1];
-            (transform.parent, otherItem.transform.parent) = (otherItem.transform.parent, transform.parent);
-            otherItem.GetComponent<Item>().Row -= 1;
+            otherItem = _grid.AllItems[Column, Row+1];
+            otherItem.Row -= 1;
             Row += 1;
         }
         else if ((_swipeAngle > 135f || _swipeAngle <= -135f) && Column > 0)
         {
             //Left Swipe
-            GameObject otherItem = _grid.AllItems[Column - 1, Row];
-            (transform.parent, otherItem.transform.parent) = (otherItem.transform.parent, transform.parent);
-            otherItem.GetComponent<Item>().Column += 1;
+            otherItem = _grid.AllItems[Column - 1, Row];
+            otherItem.Column += 1;
             Column -= 1;
         }
         else if (_swipeAngle < -45f && _swipeAngle >= -135f && Row > 0)
         {
             //Down Swipe
-            GameObject otherItem = _grid.AllItems[Column, Row-1];
-            (transform.parent, otherItem.transform.parent) = (otherItem.transform.parent, transform.parent);
-            otherItem.GetComponent<Item>().Row += 1;
+            otherItem = _grid.AllItems[Column, Row-1];
+            otherItem.Row += 1;
             Row -= 1;
         }
+
+        if (otherItem != null)
+        {
+            (transform.parent, otherItem.transform.parent) = (otherItem.transform.parent, transform.parent);
+            _grid.AllItems[Column, Row] = this;
+            _grid.AllItems[otherItem.Column, otherItem.Row] = otherItem;
+        }
+       
     }
 
 
