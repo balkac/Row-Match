@@ -20,8 +20,10 @@ public class BoardMovesCountController : MonoBehaviour
         _grid.OnGridInitialized -= OnGridInitialized;
     }
 
-    private void OnGridInitialized()
+    private void OnGridInitialized(LevelData levelData)
     {
+        _movesCount = levelData.MoveCount;
+        OnMovesCountChanged?.Invoke(_movesCount);
         for (int i = 0; i < _grid.Width; i++)
         {
             for (int j = 0; j < _grid.Height; j++)

@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class ScoreManager : Singleton<ScoreManager>
 {
-    [SerializeField] private GameplayPointData gameplayPointData;
+    [SerializeField] private ItemContainer _itemContainer;
 
     private Grid _grid;
 
@@ -25,7 +25,7 @@ public class ScoreManager : Singleton<ScoreManager>
 
     private void OnRowMatched(EItem ItemType, int row)
     {
-        int itemPoint = gameplayPointData.GetItemPoint(ItemType);
+        int itemPoint = _itemContainer.GetItemPoint(ItemType);
         _levelScore += _grid.Width * itemPoint;
         OnScoreChanged?.Invoke(_levelScore);
         Debug.Log("LEVEL SCORE : " + _levelScore);

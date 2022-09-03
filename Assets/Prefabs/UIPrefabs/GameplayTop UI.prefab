@@ -271,7 +271,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _targetText: {fileID: 1487610881}
-  _boardMovesController: {fileID: 0}
+  boardMovesCountController: {fileID: 0}
 --- !u!1 &6906900031679572569
 GameObject:
   m_ObjectHideFlags: 0
@@ -1085,6 +1085,7 @@ GameObject:
   - component: {fileID: 6906900033225082355}
   - component: {fileID: 6906900033225082352}
   - component: {fileID: 6906900033225082353}
+  - component: {fileID: 6351721486938702704}
   m_Layer: 0
   m_Name: LevelText
   m_TagString: Untagged
@@ -1248,3 +1249,16 @@ MonoBehaviour:
   m_maskType: 0
   _SortingLayerID: 0
   _SortingOrder: 0
+--- !u!114 &6351721486938702704
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6906900033225082367}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 11b19edd985848e786c87918a09a951b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _targetText: {fileID: 6906900033225082353}

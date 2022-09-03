@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -7,7 +6,8 @@ public class Grid : MonoBehaviour
 {
     public int Width;
     public int Height;
-    public List<GameObject> ItemPrefabs;
+    // public List<GameObject> ItemPrefabs;
+    public ItemContainer ItemContainer;
     public GameObject TilePrefab;
     public Transform TileContainer;
     private Tile[,] _allTiles;
@@ -15,15 +15,25 @@ public class Grid : MonoBehaviour
     public Tile[,] AllTiles => _allTiles;
     public Item[,] AllItems => _allItems;
     public Action<EItem,int> OnRowMatched;
-    public Action OnGridInitialized;
-    void Start()
+    public Action<LevelData> OnGridInitialized;
+
+    private void Awake()
     {
-        _allTiles = new Tile[Width, Height];
-        _allItems = new Item[Width, Height];
-        Init();
+        GameManager.Instance.OnGameStarted += OnGameStarted;
+    }
+
+    private void OnGameStarted(LevelData levelData)
+    {
+        Init(levelData);
         SubscribeToEvents();
     }
 
+    private void OnApplicationQuit()
+    {
+        UnsubscribeToEvents();
+        GameManager.Instance.OnGameStarted -= OnGameStarted;
+    }
+    
     private void SubscribeToEvents()
     {
         for (int i = 0; i < Width; i++)
@@ -31,6 +41,19 @@ public class Grid : MonoBehaviour
             for (int j = 0; j < Height; j++)
             {
                 _allItems[i, j].GetComponent<Item>().OnItemMoved += OnItemMoved;
+            }
+        }
+    }
+    private void UnsubscribeToEvents()
+    {
+        for (int i = 0; i < Width; i++)
+        {
+            for (int j = 0; j < Height; j++)
+            {
+                if (_allItems[i, j] != null)
+                {
+                    _allItems[i, j].GetComponent<Item>().OnItemMoved -= OnItemMoved;
+                }
             }
         }
     }
@@ -49,28 +72,16 @@ public class Grid : MonoBehaviour
             Debug.Log(row+".ROW ESLESTI ---"+ "Item tipi ---" + itemType );
         }
     }
+    
 
-    private void OnApplicationQuit()
+    private void Init(LevelData levelData = null)
     {
-        UnsubscribeToEvents();
-    }
-
-    private void UnsubscribeToEvents()
-    {
-        for (int i = 0; i < Width; i++)
-        {
-            for (int j = 0; j < Height; j++)
-            {
-                if (_allItems[i, j] != null)
-                {
-                    _allItems[i, j].GetComponent<Item>().OnItemMoved -= OnItemMoved;
-                }
-            }
-        }
-    }
-
-    private void Init()
-    {
+        Width = levelData.GridWidth;
+        Height = levelData.GridHeight;
+        
+        _allTiles = new Tile[Width, Height];
+        _allItems = new Item[Width, Height];
+        int prefabIndex = 0;
         for (int i = 0; i < Width; i++)
         {
             for (int j = 0; j < Height; j++)
@@ -80,17 +91,17 @@ public class Grid : MonoBehaviour
                     Instantiate(TilePrefab, position, Quaternion.identity,TileContainer);
                 backGroundTile.name = "( " + i + ", " + j + " )";
                 
-                
-                int itemToUse = Random.Range(0, ItemPrefabs.Count);
-                GameObject item = Instantiate(ItemPrefabs[itemToUse],
+                GameObject itemToUse = ItemContainer.GetItemPrefab(levelData.GridItems[prefabIndex]);
+                GameObject item = Instantiate(itemToUse,
                     position, Quaternion.identity,transform);
                 item.transform.parent = backGroundTile.transform;
                 item.name = item.GetComponent<Item>().ItemType + "";
                 _allItems[i, j] = item.GetComponent<Item>();
+                prefabIndex++;
             }
         }
         TileContainer.position = transform.position;
-        OnGridInitialized?.Invoke();
+        OnGridInitialized?.Invoke(levelData);
     }
 
     
