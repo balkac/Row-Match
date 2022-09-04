@@ -46,6 +46,11 @@ public class Grid : MonoBehaviour
     }
     private void UnsubscribeToEvents()
     {
+        if (_allItems == null)
+        {
+            return;
+        }
+        
         for (int i = 0; i < Width; i++)
         {
             for (int j = 0; j < Height; j++)

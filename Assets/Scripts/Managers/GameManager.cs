@@ -8,13 +8,13 @@ public class GameManager : Singleton<GameManager>
     private Grid _grid;
     private List<int> _remainingRows = new List<int>();
     public Action OnGameEnded;
+    private int _currentLevel = 1;
     private void Awake()
     {
         _grid = FindObjectOfType<Grid>();
         _grid.OnRowMatched += OnRowMatched;
         _grid.OnGridInitialized += OnGridInitialized;
     }
-
     private void OnGridInitialized(LevelData levelData)
     {
         for (int i = 0; i < levelData.GridHeight; i++)
@@ -22,28 +22,26 @@ public class GameManager : Singleton<GameManager>
             _remainingRows.Add(i);
         }
     }
-
+    
+    //Button OnClicked;
     private void Start()
     {
-        StartLevel(1);
+        // StartLevel(_currentLevel);
     }
-
     private void OnDestroy()
     {
         _grid.OnRowMatched -= OnRowMatched;
         _grid.OnGridInitialized -= OnGridInitialized;
     }
-
     private void OnRowMatched(EItem itemType, int row)
     {
         _remainingRows.Remove(row);
         if (CheckGameEnd())
         {
-            OnGameEnded?.Invoke();
+            EndGame();
             Debug.Log("END GAME");
         }
     }
-
     private bool CheckGameEnd()
     {
         Dictionary<EItem, int> itemToCounts = new Dictionary<EItem, int>();
@@ -106,9 +104,20 @@ public class GameManager : Singleton<GameManager>
     private void StartLevel(int levelNumber)
     {
         LevelData levelData = LevelManager.Instance.GetLevelData(levelNumber);
+       
         OnGameStarted?.Invoke(levelData);
         // Debug.Log("H---" + levelData.GridHeight);
         // Debug.Log("W---" + levelData.GridWidth);
         // Debug.Log("MOVECOUNT---" + levelData.MoveCount);
+    }
+
+    public void LoadMainScene()
+    {
+        
+    }
+    public void EndGame()
+    {
+        SaveManager.Instance.SaveCurrentLevel(_currentLevel);
+        OnGameEnded?.Invoke();
     }
 }

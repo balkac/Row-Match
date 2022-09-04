@@ -9,7 +9,12 @@ public class UIButton : MonoBehaviour {
     [SerializeField] private Vector3 _defaultScale;
     
     public Action OnButtonClicked;
-    
+
+    private void Awake()
+    {
+        _defaultScale = transform.localScale;
+    }
+
     private void OnMouseDown()
     {
         Debug.Log("OnMouseDown");
@@ -33,7 +38,6 @@ public class UIButton : MonoBehaviour {
             () =>
             {
                 OnButtonClicked?.Invoke();
-                gameObject.SetActive(false);
             });
         Debug.Log("OnMouseUpAsButton");
        

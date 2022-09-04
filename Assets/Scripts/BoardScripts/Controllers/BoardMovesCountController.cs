@@ -14,12 +14,10 @@ public class BoardMovesCountController : MonoBehaviour
     {
         _grid.OnGridInitialized += OnGridInitialized;
     }
-
     private void OnDestroy()
     {
         _grid.OnGridInitialized -= OnGridInitialized;
     }
-
     private void OnGridInitialized(LevelData levelData)
     {
         _movesCount = levelData.MoveCount;
@@ -35,10 +33,13 @@ public class BoardMovesCountController : MonoBehaviour
             }
         }
     }
-
     private void OnItemMoved(Item item)
     {
         _movesCount -= 1;
+        if (MovesCount == 0)
+        {
+            GameManager.Instance.EndGame();
+        }
         OnMovesCountChanged?.Invoke(_movesCount);
     }
 }

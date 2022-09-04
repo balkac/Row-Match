@@ -1,4 +1,6 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -9,14 +11,19 @@ public class SaveManager : Singleton<SaveManager>
     private bool _requestResponse = true;
 
     private const string USER_LEVEL_SAVE = "UserLevelSave";
+    
+    private const string LEVEL_HIGH_SCORE = "LevelHighScore";
+
+    private const string LAST_PLAYABLE_LEVEL = "LastPlayableLevel";
+
+    public Dictionary<int, int> LevelToHighScore;
     private void Awake()
     {
         LoadSave();
     }
-
     private void OnDestroy()
     {
-        if (_requestResponse)
+        if (_requestResponse && !PlayerPrefs.HasKey(USER_LEVEL_SAVE) )
         {
             PlayerPrefs.SetInt(USER_LEVEL_SAVE, 1);
             PlayerPrefs.Save();
@@ -32,9 +39,17 @@ public class SaveManager : Singleton<SaveManager>
                 ReadText(levelContainerData.Url,levelContainerData.LevelNumber);
             }
         }
+
+        bool hasLastPlayableLevel = PlayerPrefs.HasKey(LAST_PLAYABLE_LEVEL);
+        if (hasLastPlayableLevel)
+        {
+            int lastLevel = PlayerPrefs.GetInt(LAST_PLAYABLE_LEVEL);
+            for (int i = 1; i < lastLevel; i++)
+            {
+                LevelToHighScore.Add(i,PlayerPrefs.GetInt(LEVEL_HIGH_SCORE+i));
+            }
+        }
     }
-
-
     private void ReadText(string url,int levelNumber)
     {
         StartCoroutine(GetText(url,levelNumber));
@@ -56,5 +71,24 @@ public class SaveManager : Singleton<SaveManager>
                 System.IO.File.WriteAllText(savePath, unityWebRequest.downloadHandler.text);
             }
         }
+    }
+
+    public void SaveCurrentLevel(int level)
+    {
+        string levelHigh = LEVEL_HIGH_SCORE + level;
+        PlayerPrefs.SetInt(levelHigh,ScoreManager.Instance.LevelScore);
+
+        if (PlayerPrefs.HasKey(LAST_PLAYABLE_LEVEL) &&
+            level+1 > PlayerPrefs.GetInt(LAST_PLAYABLE_LEVEL))
+        {
+            PlayerPrefs.SetInt(LAST_PLAYABLE_LEVEL,level+1);
+        }
+
+        if (!PlayerPrefs.HasKey(LAST_PLAYABLE_LEVEL))
+        {
+            PlayerPrefs.SetInt(LAST_PLAYABLE_LEVEL,level+1);
+        }
+           
+        PlayerPrefs.Save();
     }
 }
