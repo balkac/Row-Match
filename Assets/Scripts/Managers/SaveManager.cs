@@ -15,8 +15,10 @@ public class SaveManager : Singleton<SaveManager>
     private const string LEVEL_HIGH_SCORE = "LevelHighScore";
 
     private const string LAST_PLAYABLE_LEVEL = "LastPlayableLevel";
-
-    public Dictionary<int, int> LevelToHighScore;
+    
+    public List<LevelSection> LevelSections = new List<LevelSection>();
+    
+    public Action OnSaveLoaded;
     private void Awake()
     {
         LoadSave();
@@ -46,9 +48,10 @@ public class SaveManager : Singleton<SaveManager>
             int lastLevel = PlayerPrefs.GetInt(LAST_PLAYABLE_LEVEL);
             for (int i = 1; i < lastLevel; i++)
             {
-                LevelToHighScore.Add(i,PlayerPrefs.GetInt(LEVEL_HIGH_SCORE+i));
+                LevelSections.Add(new LevelSection(i, PlayerPrefs.GetInt(LEVEL_HIGH_SCORE + i)));
             }
         }
+        OnSaveLoaded?.Invoke();
     }
     private void ReadText(string url,int levelNumber)
     {

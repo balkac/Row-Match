@@ -17,12 +17,10 @@ public class ScoreManager : Singleton<ScoreManager>
         _grid = FindObjectOfType<Grid>();
         _grid.OnRowMatched += OnRowMatched;
     }
-
     private void OnDestroy()
     {
         _grid.OnRowMatched -= OnRowMatched;
     }
-
     private void OnRowMatched(EItem ItemType, int row)
     {
         int itemPoint = _itemContainer.GetItemPoint(ItemType);

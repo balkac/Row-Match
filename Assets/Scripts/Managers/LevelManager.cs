@@ -5,6 +5,9 @@ using UnityEngine;
 public class LevelManager : Singleton<LevelManager>
 {
     [SerializeField] private LevelContainer _levelContainer;
+
+    public LevelContainer LevelContainer => _levelContainer;
+
     public LevelData GetLevelData(int levelNumber)
     {
         LevelData levelData = new LevelData();
@@ -26,7 +29,6 @@ public class LevelManager : Singleton<LevelManager>
 
         return levelData;
     }
-
     private void ParseText(string text,LevelData levelData)
     {
         string[] splitArray =  text.Split(char.Parse("\n"));
@@ -81,5 +83,4 @@ public class LevelManager : Singleton<LevelManager>
         //     Debug.Log("ITEM --- " + eItem);
         // }
     }
-  
 }

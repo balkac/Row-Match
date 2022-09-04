@@ -101,7 +101,7 @@ public class GameManager : Singleton<GameManager>
         
         return true;
     }
-    private void StartLevel(int levelNumber)
+    public void StartLevel(int levelNumber)
     {
         LevelData levelData = LevelManager.Instance.GetLevelData(levelNumber);
        

@@ -1,17 +1,29 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class CameraSizer : MonoBehaviour
 {
     private Grid _grid;
 
-    private void Start()
+    private void Awake()
     {
         _grid = FindObjectOfType<Grid>();
         if (_grid != null)
         {
-            RepositionCamera(_grid.Width, _grid.Height);
+            _grid.OnGridInitialized += OnGridInitialized;
         }
+    }
+
+    private void OnApplicationQuit()
+    {
+        if (_grid != null)
+        {
+            _grid.OnGridInitialized -= OnGridInitialized;
+        }
+    }
+
+    private void OnGridInitialized(LevelData obj)
+    {
+        RepositionCamera(_grid.Width, _grid.Height);
     }
 
     private void RepositionCamera(float x, float y)

@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class LevelsVM : MonoBehaviour
 {
@@ -10,14 +9,20 @@ public class LevelsVM : MonoBehaviour
     {
         gameObject.SetActive(false);
         _levelsButton.OnButtonClicked += OnButtonClicked;
+        GameManager.Instance.OnGameStarted += OnGameStarted;
         _xButton.OnButtonClicked += OnXButtonClicked;
     }
-    
+
+    private void OnGameStarted(LevelData obj)
+    {
+        gameObject.SetActive(false);
+    }
+
     private void OnApplicationQuit()
     {
         _levelsButton.OnButtonClicked -= OnButtonClicked;
         _xButton.OnButtonClicked -= OnXButtonClicked;
-
+        GameManager.Instance.OnGameStarted += OnGameStarted;
     }
 
     private void OnButtonClicked()

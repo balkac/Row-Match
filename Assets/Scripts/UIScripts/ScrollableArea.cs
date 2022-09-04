@@ -38,7 +38,7 @@ public class ScrollableArea : MonoBehaviour
             {
                 Vector2 targetPos = new Vector2(ScroolMenu.position.x,
                     (ScroolMenu.position.y + Time.deltaTime * 20f));
-                if (targetPos.y < _scrollMenuFirstPosition.y + 15f)
+                if (targetPos.y < _scrollMenuFirstPosition.y + 16.5f)
                 {
                     ScroolMenu.position = new Vector3(ScroolMenu.position.x,
                         targetPos.y,ScroolMenu.position.z);
