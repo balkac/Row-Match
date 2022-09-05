@@ -10,9 +10,9 @@ public class TextWidget : MonoBehaviour
         AwakeCustomActions();
     }
 
-    private void OnDestroy()
+    private void OnApplicationQuit()
     {
-        OnDestroyCustomActions();
+        OnApplicationQuitActions();
     }
     
     protected virtual void AwakeCustomActions()
@@ -20,7 +20,7 @@ public class TextWidget : MonoBehaviour
         
     }
 
-    protected virtual void OnDestroyCustomActions()
+    protected virtual void OnApplicationQuitActions()
     {
         
     }

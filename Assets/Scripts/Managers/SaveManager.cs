@@ -16,10 +16,14 @@ public class SaveManager : Singleton<SaveManager>
 
     private const string LAST_PLAYABLE_LEVEL = "LastPlayableLevel";
     
+    private const string IS_HIGH_SCORE = "IsHighScore";
+
+    private const string LAST_HIGH_SCORE = "LastHighScore";
+    
     public List<LevelSection> LevelSections = new List<LevelSection>();
     
-    public Action OnSaveLoaded;
-    private void Awake()
+    public Action<bool> OnSaveLoaded;
+    private void Start()
     {
         LoadSave();
     }
@@ -31,6 +35,13 @@ public class SaveManager : Singleton<SaveManager>
             PlayerPrefs.Save();
         }
     }
+
+    private void OnApplicationQuit()
+    {
+        PlayerPrefs.DeleteKey(IS_HIGH_SCORE);
+        PlayerPrefs.DeleteKey(LAST_HIGH_SCORE);
+    }
+
     private void LoadSave()
     {
         bool hasLevelSave = PlayerPrefs.HasKey(USER_LEVEL_SAVE);
@@ -51,7 +62,7 @@ public class SaveManager : Singleton<SaveManager>
                 LevelSections.Add(new LevelSection(i, PlayerPrefs.GetInt(LEVEL_HIGH_SCORE + i)));
             }
         }
-        OnSaveLoaded?.Invoke();
+        OnSaveLoaded?.Invoke(PlayerPrefs.HasKey(IS_HIGH_SCORE));
     }
     private void ReadText(string url,int levelNumber)
     {
@@ -76,10 +87,29 @@ public class SaveManager : Singleton<SaveManager>
         }
     }
 
-    public void SaveCurrentLevel(int level)
+    public bool SaveCurrentLevel(int level)
     {
+        bool isHighScore = false;
         string levelHigh = LEVEL_HIGH_SCORE + level;
-        PlayerPrefs.SetInt(levelHigh,ScoreManager.Instance.LevelScore);
+
+        if (PlayerPrefs.HasKey(levelHigh))
+        {
+            if (ScoreManager.Instance.LevelScore > PlayerPrefs.GetInt(levelHigh))
+            {
+                PlayerPrefs.SetInt(levelHigh,ScoreManager.Instance.LevelScore);
+                PlayerPrefs.SetInt(IS_HIGH_SCORE,1);
+                PlayerPrefs.SetInt(LAST_HIGH_SCORE,ScoreManager.Instance.LevelScore);
+                isHighScore = true;
+            }
+        }
+        else
+        {
+            PlayerPrefs.SetInt(levelHigh,ScoreManager.Instance.LevelScore);
+            PlayerPrefs.SetInt(IS_HIGH_SCORE,1);
+            PlayerPrefs.SetInt(LAST_HIGH_SCORE,ScoreManager.Instance.LevelScore);
+            isHighScore = true;
+        }
+        
 
         if (PlayerPrefs.HasKey(LAST_PLAYABLE_LEVEL) &&
             level+1 > PlayerPrefs.GetInt(LAST_PLAYABLE_LEVEL))
@@ -93,5 +123,11 @@ public class SaveManager : Singleton<SaveManager>
         }
            
         PlayerPrefs.Save();
+        return isHighScore;
+    }
+
+    public int GetLastHighScore()
+    {
+        return PlayerPrefs.GetInt(LAST_HIGH_SCORE);
     }
 }

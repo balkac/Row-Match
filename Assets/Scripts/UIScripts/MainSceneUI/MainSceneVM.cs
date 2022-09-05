@@ -6,11 +6,23 @@ public class MainSceneVM : MonoBehaviour
 
     private void Awake()
     {
+        SaveManager.Instance.OnSaveLoaded += OnSaveLoaded;
         _levelsButton.OnButtonClicked += OnButtonClicked;
     }
 
-    private void OnDestroy()
+    private void OnSaveLoaded(bool isHighScore)
     {
+        if (isHighScore)
+        {
+            Debug.Log("HIGH SCORE");
+            gameObject.SetActive(false);
+            
+        }
+    }
+
+    private void OnApplicationQuit()
+    {
+        SaveManager.Instance.OnSaveLoaded -= OnSaveLoaded;
         _levelsButton.OnButtonClicked -= OnButtonClicked;
     }
 

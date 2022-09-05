@@ -7,13 +7,13 @@
         SetTargetText(ScoreManager.Instance.LevelScore.ToString());
     }
 
-    protected override void OnDestroyCustomActions()
+    protected override void OnApplicationQuitActions()
     {
-        base.OnDestroyCustomActions();
+        base.OnApplicationQuitActions();
         ScoreManager.Instance.OnScoreChanged -= OnScoreChanged;
     }
 
-    private void OnScoreChanged(int score)
+    private void OnScoreChanged(int score, EItem itemType, int row)
     {
         SetTargetText(score.ToString());
     }

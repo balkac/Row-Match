@@ -9,7 +9,7 @@ public class ScoreManager : Singleton<ScoreManager>
 
     private int _levelScore;
     
-    public Action<int> OnScoreChanged;
+    public Action<int,EItem,int> OnScoreChanged;
     
     public int LevelScore => _levelScore;
     private void Awake()
@@ -21,11 +21,11 @@ public class ScoreManager : Singleton<ScoreManager>
     {
         _grid.OnRowMatched -= OnRowMatched;
     }
-    private void OnRowMatched(EItem ItemType, int row)
+    private void OnRowMatched(EItem itemType, int row)
     {
-        int itemPoint = _itemContainer.GetItemPoint(ItemType);
+        int itemPoint = _itemContainer.GetItemPoint(itemType);
         _levelScore += _grid.Width * itemPoint;
-        OnScoreChanged?.Invoke(_levelScore);
+        OnScoreChanged?.Invoke(_levelScore,itemType,row);
         Debug.Log("LEVEL SCORE : " + _levelScore);
     }
 }

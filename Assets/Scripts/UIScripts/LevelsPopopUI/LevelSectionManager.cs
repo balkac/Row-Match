@@ -4,19 +4,22 @@ using UnityEngine;
 public class LevelSectionManager : MonoBehaviour
 {
     [SerializeField] private GameObject _sectionWidgetPrefab;
-
+    [SerializeField] private Transform _sectionParent;
     [SerializeField] private float _offset = 1.5f;
     private float _yValue;
-    private List<LevelSection> _levelSections = new List<LevelSection>();
-    private List<LevelSectionWidget> _levelSectionWidgets = new List<LevelSectionWidget>();
+    private List<LevelSection> _levelSections;
+    private List<LevelSectionWidget> _levelSectionWidgets;
     private void Awake()
     {
+        _levelSections = new List<LevelSection>();
+        _levelSectionWidgets = new List<LevelSectionWidget>();
+        
         SaveManager.Instance.OnSaveLoaded += OnSaveLoaded;
         
         foreach (var levelContainerData in LevelManager.Instance.LevelContainer.LevelContainerDatas )
         {
             GameObject sectionGO = Instantiate(_sectionWidgetPrefab);
-            sectionGO.transform.parent = transform;
+            sectionGO.transform.parent = _sectionParent;
             sectionGO.transform.localPosition = new Vector3(0, _yValue, 0);
             _yValue -= _offset;
             LevelSectionWidget levelSectionWidget = sectionGO.GetComponent<LevelSectionWidget>();
@@ -25,12 +28,12 @@ public class LevelSectionManager : MonoBehaviour
         }
     }
 
-    private void OnDestroy()
+    private void OnApplicationQuit()
     {
         SaveManager.Instance.OnSaveLoaded -= OnSaveLoaded;
     }
 
-    private void OnSaveLoaded()
+    private void OnSaveLoaded(bool isHighScore)
     {
         _levelSections = SaveManager.Instance.LevelSections;
         foreach (var levelSection in _levelSections)

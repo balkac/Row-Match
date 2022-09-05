@@ -1,18 +1,43 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
 public class LevelsVM : MonoBehaviour
 {
     [SerializeField] private UIButton _levelsButton;
     [SerializeField] private UIButton _xButton;
+    [SerializeField] private GameObject _menuVisuals;
     [SerializeField] private GameObject _mainVm;
+    [SerializeField] private HighestScoreUI _highestScoreUI;
+    public float HighestScoreDelay;
     private void Awake()
     {
-        gameObject.SetActive(false);
         _levelsButton.OnButtonClicked += OnButtonClicked;
+        SaveManager.Instance.OnSaveLoaded += OnSaveLoaded;
         GameManager.Instance.OnGameStarted += OnGameStarted;
         _xButton.OnButtonClicked += OnXButtonClicked;
     }
 
+    private void OnSaveLoaded(bool isHighScore)
+    {
+        if (isHighScore)
+        {
+            StartCoroutine(VmDelayRoutine(HighestScoreDelay));
+            _highestScoreUI.TryActivate();
+            _menuVisuals.SetActive(false);
+        }
+        else
+        {
+            gameObject.SetActive(false);
+            _highestScoreUI.gameObject.SetActive(false);
+        }
+    }
+
+    private IEnumerator VmDelayRoutine(float highestScoreDelay)
+    {
+        yield return new WaitForSeconds(highestScoreDelay);
+        _highestScoreUI.gameObject.SetActive(false);
+        _menuVisuals.SetActive(true);
+    }
     private void OnGameStarted(LevelData obj)
     {
         gameObject.SetActive(false);
@@ -22,7 +47,8 @@ public class LevelsVM : MonoBehaviour
     {
         _levelsButton.OnButtonClicked -= OnButtonClicked;
         _xButton.OnButtonClicked -= OnXButtonClicked;
-        GameManager.Instance.OnGameStarted += OnGameStarted;
+        SaveManager.Instance.OnSaveLoaded -= OnSaveLoaded;
+        GameManager.Instance.OnGameStarted -= OnGameStarted;
     }
 
     private void OnButtonClicked()

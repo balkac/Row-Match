@@ -11,9 +11,9 @@ public class MovesCountTextWidget : TextWidget
         boardMovesCountController.OnMovesCountChanged += OnMovesCountChanged;
     }
 
-    protected override void OnDestroyCustomActions()
+    protected override void OnApplicationQuitActions()
     {
-        base.OnDestroyCustomActions();
+        base.OnApplicationQuitActions();
         boardMovesCountController.OnMovesCountChanged -= OnMovesCountChanged;
     }
 

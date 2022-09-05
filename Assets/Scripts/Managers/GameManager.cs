@@ -1,18 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : Singleton<GameManager>
 {
     public Action<LevelData> OnGameStarted;
     private Grid _grid;
     private List<int> _remainingRows = new List<int>();
-    public Action OnGameEnded;
+    public Action<bool> OnGameEnded;
     private int _currentLevel = 1;
     private void Awake()
     {
         _grid = FindObjectOfType<Grid>();
-        _grid.OnRowMatched += OnRowMatched;
+        ScoreManager.Instance.OnScoreChanged += OnScoreChanged;
         _grid.OnGridInitialized += OnGridInitialized;
     }
     private void OnGridInitialized(LevelData levelData)
@@ -23,17 +24,12 @@ public class GameManager : Singleton<GameManager>
         }
     }
     
-    //Button OnClicked;
-    private void Start()
-    {
-        // StartLevel(_currentLevel);
-    }
     private void OnDestroy()
     {
-        _grid.OnRowMatched -= OnRowMatched;
+        ScoreManager.Instance.OnScoreChanged -= OnScoreChanged;
         _grid.OnGridInitialized -= OnGridInitialized;
     }
-    private void OnRowMatched(EItem itemType, int row)
+    private void OnScoreChanged(int score,EItem itemType, int row)
     {
         _remainingRows.Remove(row);
         if (CheckGameEnd())
@@ -104,20 +100,21 @@ public class GameManager : Singleton<GameManager>
     public void StartLevel(int levelNumber)
     {
         LevelData levelData = LevelManager.Instance.GetLevelData(levelNumber);
-       
+        _currentLevel = levelNumber;
         OnGameStarted?.Invoke(levelData);
         // Debug.Log("H---" + levelData.GridHeight);
         // Debug.Log("W---" + levelData.GridWidth);
         // Debug.Log("MOVECOUNT---" + levelData.MoveCount);
     }
 
-    public void LoadMainScene()
+    private void LoadMainScene()
     {
-        
+        SceneManager.LoadScene(0, LoadSceneMode.Single);
     }
     public void EndGame()
-    {
-        SaveManager.Instance.SaveCurrentLevel(_currentLevel);
-        OnGameEnded?.Invoke();
+    { 
+        bool returnType = SaveManager.Instance.SaveCurrentLevel(_currentLevel);
+        OnGameEnded?.Invoke(returnType);
+        LoadMainScene();
     }
 }

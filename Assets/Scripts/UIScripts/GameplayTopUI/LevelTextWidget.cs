@@ -11,9 +11,9 @@
         SetTargetText(levelData.LevelNumber.ToString());
     }
 
-    protected override void OnDestroyCustomActions()
+    protected override void OnApplicationQuitActions()
     {
-        base.OnDestroyCustomActions();
+        base.OnApplicationQuitActions();
         GameManager.Instance.OnGameStarted -= OnGameStarted;
     }
 }
