@@ -19,6 +19,7 @@ public class SaveManager : Singleton<SaveManager>
     private const string IS_HIGH_SCORE = "IsHighScore";
 
     private const string LAST_HIGH_SCORE = "LastHighScore";
+    private const string NUMBER_OF_USER_PLAY = "NumberOfUserPlay";
     
     public List<LevelSection> LevelSections = new List<LevelSection>();
     
@@ -40,6 +41,7 @@ public class SaveManager : Singleton<SaveManager>
     {
         PlayerPrefs.DeleteKey(IS_HIGH_SCORE);
         PlayerPrefs.DeleteKey(LAST_HIGH_SCORE);
+        PlayerPrefs.DeleteKey(NUMBER_OF_USER_PLAY);
     }
 
     private void LoadSave()
@@ -106,6 +108,10 @@ public class SaveManager : Singleton<SaveManager>
                 PlayerPrefs.SetInt(LAST_HIGH_SCORE,ScoreManager.Instance.LevelScore);
                 isHighScore = true;
             }
+            else
+            {
+                PlayerPrefs.DeleteKey(IS_HIGH_SCORE);
+            }
         }
         else
         {
@@ -133,6 +139,16 @@ public class SaveManager : Singleton<SaveManager>
         }
            
         PlayerPrefs.Save();
+        
+        if (PlayerPrefs.HasKey(NUMBER_OF_USER_PLAY))
+        {
+            PlayerPrefs.SetInt(NUMBER_OF_USER_PLAY,PlayerPrefs.GetInt(NUMBER_OF_USER_PLAY)+1);
+        }
+        else
+        {
+            PlayerPrefs.SetInt(NUMBER_OF_USER_PLAY, 1);
+        }
+        
         return isHighScore;
     }
 
@@ -145,5 +161,10 @@ public class SaveManager : Singleton<SaveManager>
     {
         string levelHighScore = LEVEL_HIGH_SCORE + levelHigh;
         return PlayerPrefs.HasKey(levelHighScore) ? PlayerPrefs.GetInt(levelHighScore) : 0;
+    }
+
+    public int GetNumberOfUserPlay()
+    {
+        return PlayerPrefs.HasKey(NUMBER_OF_USER_PLAY) ? PlayerPrefs.GetInt(NUMBER_OF_USER_PLAY) : 0;
     }
 }

@@ -17,6 +17,11 @@ public class MainSceneVM : MonoBehaviour
             Debug.Log("HIGH SCORE");
             gameObject.SetActive(false);
         }
+
+        if (SaveManager.Instance.GetNumberOfUserPlay() > 0)
+        {
+            gameObject.SetActive(false);
+        }
     }
 
     private void OnApplicationQuit()

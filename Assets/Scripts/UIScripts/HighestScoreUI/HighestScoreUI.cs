@@ -25,4 +25,9 @@ public class HighestScoreUI : MonoBehaviour
             visual.transform.DOScale(new Vector3(1, 1, 1), 0.5f);
         }
     }
+
+    public void TryDeactivate()
+    {
+        gameObject.SetActive(false);
+    }
 }

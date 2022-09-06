@@ -24,12 +24,12 @@ public class LevelsVM : MonoBehaviour
             StartCoroutine(VmDelayRoutine(HighestScoreDelay));
             _highestScoreUI.TryActivate();
             _menuVisuals.SetActive(false);
+            return;
         }
-        else
-        {
-            gameObject.SetActive(false);
-            _highestScoreUI.gameObject.SetActive(false);
-        }
+        
+        _highestScoreUI.TryDeactivate();
+
+        gameObject.SetActive(SaveManager.Instance.GetNumberOfUserPlay() > 0);
     }
 
     private IEnumerator VmDelayRoutine(float highestScoreDelay)
