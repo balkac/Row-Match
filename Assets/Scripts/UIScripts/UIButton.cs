@@ -61,6 +61,7 @@ public class UIButton : MonoBehaviour {
 
     public void EnabledButton(bool enabled)
     {
+        gameObject.SetActive(enabled);
         Enabled = enabled;
     }
 }

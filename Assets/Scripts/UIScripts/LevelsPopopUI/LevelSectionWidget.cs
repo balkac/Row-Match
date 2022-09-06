@@ -7,6 +7,7 @@ public class LevelSectionWidget : MonoBehaviour
     [SerializeField] private TMP_Text _levelHighestScoreText;
     [SerializeField] private TMP_Text _levelMovesText;
     [SerializeField] private UIButton _levelButton;
+    [SerializeField] private GameObject _lockedButton;
     private int _levelNumber;
     private void Awake()
     {
@@ -33,6 +34,7 @@ public class LevelSectionWidget : MonoBehaviour
     
     public void TryActivate(int highScore)
     {
+        _lockedButton.SetActive(false);
         _levelButton.EnabledButton(true);
         _playButtonText.text = "PLAY";
 
@@ -48,8 +50,8 @@ public class LevelSectionWidget : MonoBehaviour
 
     public void TryDeactivate()
     {
+        _lockedButton.SetActive(true);
         _levelButton.EnabledButton(false);
         _levelHighestScoreText.text = "Locked Level";
-        _playButtonText.text = "LOCKED";
     }
 }
