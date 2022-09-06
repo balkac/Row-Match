@@ -198,6 +198,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e4bf57c978340edbcc4a064f296e7fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  EndGameDelay: 2
 --- !u!1 &464726309 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8701222791046932467, guid: 21815a665a273eb4298274eea0ed6d64,
@@ -940,11 +941,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: LevelsPopupUI
-      objectReference: {fileID: 0}
-    - target: {fileID: 9044460469012757052, guid: 79f8e0ec8afe5314dbc8d12f9f79d155,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9044460469012757053, guid: 79f8e0ec8afe5314dbc8d12f9f79d155,
         type: 3}

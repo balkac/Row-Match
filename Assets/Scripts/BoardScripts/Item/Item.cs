@@ -1,4 +1,5 @@
 ﻿using System;
+using DG.Tweening;
 using UnityEngine;
 
 public class Item : MonoBehaviour
@@ -17,14 +18,25 @@ public class Item : MonoBehaviour
     private bool _isMatch;
     public bool IsMatch => _isMatch;
     public Action<Item> OnItemMoved;
-    
+    private bool _canMove = true;
     private void Start()
     {
         _grid = FindObjectOfType<Grid>();
+        GameManager.Instance.OnGameEnded += OnGameEnded;
         TargetX = (int)transform.position.x;
         TargetY = (int)transform.position.y;
         Column = TargetX;
         Row = TargetY;
+    }
+
+    private void OnApplicationQuit()
+    {
+        GameManager.Instance.OnGameEnded -= OnGameEnded;
+    }
+
+    private void OnGameEnded(bool isHighScore)
+    {
+        _canMove = false;
     }
 
     private void Update()
@@ -64,12 +76,20 @@ public class Item : MonoBehaviour
 
     private void OnMouseDown()
     {
+        if (!_canMove)
+        {
+            return;
+        }
         _firstTouchPosition = Camera.main.ScreenToWorldPoint(
             Input.mousePosition);
     }
 
     private void OnMouseUp()
     {
+        if (!_canMove)
+        {
+            return;
+        }
         _finalTouchPosition = Camera.main.ScreenToWorldPoint(
             Input.mousePosition);
         CalculateAngle();
@@ -150,10 +170,14 @@ public class Item : MonoBehaviour
         return false;
     }
 
-
     public void DisableItem()
     {
-        Instantiate(_disableItem,transform.parent.position,Quaternion.identity,transform.parent);
+        GameObject disableObject = Instantiate(_disableItem,transform.parent.position,Quaternion.identity,transform.parent);
+        disableObject.transform.DOScale(new Vector3(1.2f, 1.2f, 1.2f), 0.5f).OnComplete(
+            () =>
+            {
+                disableObject.transform.DOScale(new Vector3(1, 1, 1), 0.5f);
+            });
         _isMatch = true;
         Destroy(this.gameObject);
     }

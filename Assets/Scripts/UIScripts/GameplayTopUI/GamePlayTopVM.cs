@@ -2,6 +2,8 @@
 
 public class GamePlayTopVM : MonoBehaviour
 {
+    [SerializeField] private HighestScoreTextWidget _highestScoreTextWidget;
+    [SerializeField] private LevelTextWidget _levelTextWidget;
     private void Awake()
     {
         gameObject.SetActive(false);   
@@ -15,6 +17,8 @@ public class GamePlayTopVM : MonoBehaviour
 
     private void OnGameStarted(LevelData levelData)
     {
+        _highestScoreTextWidget.SetTargetText(SaveManager.Instance.GetHighestLevelScore(levelData.LevelNumber).ToString());
+        _levelTextWidget.SetTargetText(levelData.LevelNumber.ToString());
         gameObject.SetActive(true);       
     }
     

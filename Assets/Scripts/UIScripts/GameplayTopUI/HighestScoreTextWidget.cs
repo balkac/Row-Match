@@ -1,4 +1,4 @@
-﻿public class LevelTextWidget : TextWidget
+﻿public class HighestScoreTextWidget : TextWidget
 {
     protected override void AwakeCustomActions()
     {

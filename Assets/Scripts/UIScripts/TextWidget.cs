@@ -30,7 +30,7 @@ public class TextWidget : MonoBehaviour
         set => _targetText = value;
     }
 
-    protected void SetTargetText(string text)
+    public void SetTargetText(string text)
     {
         _targetText.text = text;
     }

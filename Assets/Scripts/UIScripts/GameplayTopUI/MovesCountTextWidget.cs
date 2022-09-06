@@ -3,11 +3,11 @@
 public class MovesCountTextWidget : TextWidget
 {
     [SerializeField] private BoardMovesCountController boardMovesCountController;
-
+    [SerializeField] private string _prefix;
     protected override void AwakeCustomActions()
     {
         base.AwakeCustomActions();
-        SetTargetText(boardMovesCountController.MovesCount.ToString());
+        SetTargetText(_prefix + boardMovesCountController.MovesCount.ToString());
         boardMovesCountController.OnMovesCountChanged += OnMovesCountChanged;
     }
 
@@ -19,6 +19,6 @@ public class MovesCountTextWidget : TextWidget
 
     private void OnMovesCountChanged(int movesCount)
     {
-        SetTargetText(movesCount.ToString());
+        SetTargetText(_prefix + " " + movesCount);
     }
 }

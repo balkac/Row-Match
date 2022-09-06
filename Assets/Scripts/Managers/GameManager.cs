@@ -1,15 +1,19 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class GameManager : Singleton<GameManager>
 {
+    public float EndGameDelay;
     public Action<LevelData> OnGameStarted;
     private Grid _grid;
     private List<int> _remainingRows = new List<int>();
     public Action<bool> OnGameEnded;
     private int _currentLevel = 1;
+    public int CurrentLevel => _currentLevel;
+
     private void Awake()
     {
         _grid = FindObjectOfType<Grid>();
@@ -109,7 +113,14 @@ public class GameManager : Singleton<GameManager>
 
     private void LoadMainScene()
     {
+        StartCoroutine(SceneLoadRoutine());
+    }
+
+    private IEnumerator SceneLoadRoutine()
+    {
+        yield return new WaitForSeconds(EndGameDelay);
         SceneManager.LoadScene(0, LoadSceneMode.Single);
+
     }
     public void EndGame()
     { 

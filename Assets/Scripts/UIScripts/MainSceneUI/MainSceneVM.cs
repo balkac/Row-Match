@@ -16,7 +16,6 @@ public class MainSceneVM : MonoBehaviour
         {
             Debug.Log("HIGH SCORE");
             gameObject.SetActive(false);
-            
         }
     }
 

@@ -23,7 +23,8 @@ public class LevelSectionManager : MonoBehaviour
             sectionGO.transform.localPosition = new Vector3(0, _yValue, 0);
             _yValue -= _offset;
             LevelSectionWidget levelSectionWidget = sectionGO.GetComponent<LevelSectionWidget>();
-            levelSectionWidget.SetLevelNumber(levelContainerData.LevelNumber);
+            levelSectionWidget.SetLevelNumberAndMoves(levelContainerData.LevelNumber);
+            levelSectionWidget.TryDeactivate();
             _levelSectionWidgets.Add(levelSectionWidget);
         }
     }
@@ -36,9 +37,14 @@ public class LevelSectionManager : MonoBehaviour
     private void OnSaveLoaded(bool isHighScore)
     {
         _levelSections = SaveManager.Instance.LevelSections;
+        if (_levelSections.Count == 0)
+        {
+            _levelSections.Add(new LevelSection(1,0));
+        }
+        
         foreach (var levelSection in _levelSections)
         {
-            _levelSectionWidgets[levelSection.Level-1].SetLevelHighText(levelSection.HighScore.ToString());
+            _levelSectionWidgets[levelSection.Level-1].TryActivate(levelSection.HighScore);
         }
     }
 }
