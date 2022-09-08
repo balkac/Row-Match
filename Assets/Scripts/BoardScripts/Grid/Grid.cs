@@ -1,12 +1,10 @@
 ﻿using System;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 public class Grid : MonoBehaviour
 {
     public int Width;
     public int Height;
-    // public List<GameObject> ItemPrefabs;
     public ItemContainer ItemContainer;
     public GameObject TilePrefab;
     public Transform TileContainer;

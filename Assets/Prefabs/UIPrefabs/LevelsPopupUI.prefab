@@ -28,7 +28,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3074259137046729137}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -1, z: 1.5}
+  m_LocalPosition: {x: 0, y: -1.5, z: 1.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 9044460469101237625}
@@ -172,6 +172,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ScroolMenu: {fileID: 5160783038827006310}
+  LevelSectionManager: {fileID: 3210062560961376753}
+  SwipeSpeed: 20
 --- !u!1 &4064617287716037448
 GameObject:
   m_ObjectHideFlags: 0
@@ -448,6 +450,7 @@ MonoBehaviour:
   _buttonTransform: {fileID: 9044460469565885953}
   _tweenDuration: 0.09
   _defaultScale: {x: 1, y: 1, z: 1}
+  Enabled: 1
 --- !u!58 &7966615221146127029
 CircleCollider2D:
   m_ObjectHideFlags: 0

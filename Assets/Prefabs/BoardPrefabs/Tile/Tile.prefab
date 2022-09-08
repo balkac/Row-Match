@@ -39,7 +39,7 @@ SpriteRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4334241957911034509}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
@@ -70,8 +70,8 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 9afdc7bf48ed22a4ea709870662249a8, type: 3}
+  m_SortingOrder: -1
+  m_Sprite: {fileID: 21300000, guid: 9e3c95f8e845b2149abbd973371f6900, type: 3}
   m_Color: {r: 0.745283, g: 0.745283, b: 0.745283, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -94,8 +94,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6f413c551154753a7dcde49029fd452, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ItemPrefabs:
-  - {fileID: 7426946654951184662, guid: bf80e2ff77726134c8e467933bfb43b5, type: 3}
-  - {fileID: 243141689434173669, guid: 060b3cfed3dc7154392600721649efbb, type: 3}
-  - {fileID: 8083853834904727739, guid: 64edd07de66936647964c0ab940d0a90, type: 3}
-  - {fileID: 5893346504879668901, guid: 1442415a00e160445a099b8e4070d992, type: 3}

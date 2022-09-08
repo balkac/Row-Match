@@ -1,16 +1,32 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class ScrollableArea : MonoBehaviour
 {
     public Transform ScroolMenu;
+    public LevelSectionManager LevelSectionManager;
+    public float SwipeSpeed = 20f;
     private Vector2 _firstTouchPosition;
     private Vector2 _currentTouchPosition;
     private Vector2 _tempPosition;
     private Vector2 _scrollMenuFirstPosition;
-    private float _swipeAngle = 0;
     private bool _canMove;
     private Camera _camera;
+    private float _scrollLimit;
+
+    private void Awake()
+    {
+        LevelSectionManager.OnSectionsAdded += OnSectionsAdded;
+    }
+
+    private void OnSectionsAdded(int sectionWidgetCount)
+    {
+        _scrollLimit = sectionWidgetCount * 1f;
+    }
+
+    private void OnDestroy()
+    {
+        LevelSectionManager.OnSectionsAdded -= OnSectionsAdded;
+    }
 
     private void Start()
     {
@@ -27,7 +43,7 @@ public class ScrollableArea : MonoBehaviour
             if (_currentTouchPosition.y < _firstTouchPosition.y)
             {
                 Vector2 targetPos = new Vector2(ScroolMenu.position.x,
-                    (ScroolMenu.position.y - Time.deltaTime * 20f));
+                    (ScroolMenu.position.y - Time.deltaTime * SwipeSpeed));
                 if (targetPos.y > _scrollMenuFirstPosition.y)
                 {
                     ScroolMenu.position = new Vector3(ScroolMenu.position.x,
@@ -37,8 +53,8 @@ public class ScrollableArea : MonoBehaviour
             else if (_currentTouchPosition.y > _firstTouchPosition.y)
             {
                 Vector2 targetPos = new Vector2(ScroolMenu.position.x,
-                    (ScroolMenu.position.y + Time.deltaTime * 20f));
-                if (targetPos.y < _scrollMenuFirstPosition.y + 16.5f)
+                    (ScroolMenu.position.y + Time.deltaTime * SwipeSpeed));
+                if (targetPos.y < _scrollMenuFirstPosition.y + _scrollLimit)
                 {
                     ScroolMenu.position = new Vector3(ScroolMenu.position.x,
                         targetPos.y,ScroolMenu.position.z);
@@ -51,7 +67,7 @@ public class ScrollableArea : MonoBehaviour
 
     private void OnMouseDown()
     {
-        _firstTouchPosition = Camera.main.ScreenToWorldPoint(
+        _firstTouchPosition = _camera.ScreenToWorldPoint(
             Input.mousePosition);
         _canMove = true;
     }

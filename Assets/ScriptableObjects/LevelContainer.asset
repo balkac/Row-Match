@@ -59,5 +59,32 @@ MonoBehaviour:
     Url: https://row-match.s3.amazonaws.com/levels/RM_A15
     OfflineFolderName: 
   - LevelNumber: 16
+    Url: https://row-match.s3.amazonaws.com/levels/RM_B1
+    OfflineFolderName: 
+  - LevelNumber: 17
     Url: https://row-match.s3.amazonaws.com/levels/RM_B2
+    OfflineFolderName: 
+  - LevelNumber: 18
+    Url: https://row-match.s3.amazonaws.com/levels/RM_B3
+    OfflineFolderName: 
+  - LevelNumber: 19
+    Url: https://row-match.s3.amazonaws.com/levels/RM_B4
+    OfflineFolderName: 
+  - LevelNumber: 20
+    Url: https://row-match.s3.amazonaws.com/levels/RM_B5
+    OfflineFolderName: 
+  - LevelNumber: 21
+    Url: https://row-match.s3.amazonaws.com/levels/RM_B6
+    OfflineFolderName: 
+  - LevelNumber: 22
+    Url: https://row-match.s3.amazonaws.com/levels/RM_B7
+    OfflineFolderName: 
+  - LevelNumber: 23
+    Url: https://row-match.s3.amazonaws.com/levels/RM_B8
+    OfflineFolderName: 
+  - LevelNumber: 24
+    Url: https://row-match.s3.amazonaws.com/levels/RM_B9
+    OfflineFolderName: 
+  - LevelNumber: 25
+    Url: https://row-match.s3.amazonaws.com/levels/RM_B10
     OfflineFolderName: 

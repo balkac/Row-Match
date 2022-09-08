@@ -19,11 +19,16 @@ public class SaveManager : Singleton<SaveManager>
     private const string IS_HIGH_SCORE = "IsHighScore";
 
     private const string LAST_HIGH_SCORE = "LastHighScore";
+    
     private const string NUMBER_OF_USER_PLAY = "NumberOfUserPlay";
+    
+    private int readLevelCount = 0;
     
     public List<LevelSection> LevelSections = new List<LevelSection>();
     
     public Action<bool> OnSaveLoaded;
+    
+    public Action<bool> OnReadCompleted;
     private void Start()
     {
         LoadSave();
@@ -84,12 +89,18 @@ public class SaveManager : Singleton<SaveManager>
             {
                 Debug.Log(unityWebRequest.error);
                 _requestResponse = false;
+                OnReadCompleted?.Invoke(false);
             }
             else
             {
                 string fileName = "LEVEL" + levelNumber;
                 string savePath = string.Format("{0}/{1}.txt", Application.persistentDataPath, fileName);        
                 System.IO.File.WriteAllText(savePath, unityWebRequest.downloadHandler.text);
+                readLevelCount++;
+                if (readLevelCount == _levelContainer.LevelContainerDatas.Count)
+                {
+                    OnReadCompleted?.Invoke(true);
+                }
             }
         }
     }
@@ -166,5 +177,9 @@ public class SaveManager : Singleton<SaveManager>
     public int GetNumberOfUserPlay()
     {
         return PlayerPrefs.HasKey(NUMBER_OF_USER_PLAY) ? PlayerPrefs.GetInt(NUMBER_OF_USER_PLAY) : 0;
+    }
+    public bool HasSavedLevelDatas()
+    {
+        return PlayerPrefs.HasKey(HAS_USER_LEVEL_DATAS);
     }
 }
