@@ -244,6 +244,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c0e1ce6f1b1a4e4c9fb57dfc45000236, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  CameraOffset: 0
+  AspectRatio: 1
+  Padding: 5
+  UI: {fileID: 18993264}
+  UIScale: 0.2
 --- !u!20 &519420031
 Camera:
   m_ObjectHideFlags: 0
