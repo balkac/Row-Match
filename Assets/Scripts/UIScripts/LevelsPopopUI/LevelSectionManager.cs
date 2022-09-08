@@ -8,12 +8,12 @@ public class LevelSectionManager : MonoBehaviour
     [SerializeField] private Transform _sectionParent;
     [SerializeField] private float _offset = 1.5f;
     private float _yValue;
-    private List<LevelSection> _levelSections;
+    private List<LevelSection> _activeLevelSections;
     private List<LevelSectionWidget> _levelSectionWidgets;
     public Action<int> OnSectionsAdded;
     private void Awake()
     {
-        _levelSections = new List<LevelSection>();
+        _activeLevelSections = new List<LevelSection>();
         _levelSectionWidgets = new List<LevelSectionWidget>();
 
         if (!SaveManager.Instance.HasSavedLevelDatas())
@@ -32,25 +32,21 @@ public class LevelSectionManager : MonoBehaviour
         SaveManager.Instance.OnReadCompleted -= OnReadCompleted;
         AddSections();
     }
-
-    private void OnApplicationQuit()
-    {
-        SaveManager.Instance.OnSaveLoaded -= OnSaveLoaded;
-    }
-
+    
     private void OnSaveLoaded(bool isHighScore)
     {
+        SaveManager.Instance.OnSaveLoaded -= OnSaveLoaded;
         AddSections();
     }
-
+    
     private void AddSections()
     {
-        _levelSections = SaveManager.Instance.LevelSections;
+        _activeLevelSections = SaveManager.Instance.ActiveLevelSections;
         
         foreach (var levelContainerData in LevelManager.Instance.LevelContainer.LevelContainerDatas )
         {
             if (levelContainerData.OfflineFolderName == "" && 
-                Application.internetReachability == NetworkReachability.NotReachable)
+                !SaveManager.Instance.HasSavedLevelDatas())
             {
                 break;
             }
@@ -65,12 +61,7 @@ public class LevelSectionManager : MonoBehaviour
             _levelSectionWidgets.Add(levelSectionWidget);
         }
         
-        if (_levelSections.Count == 0)
-        {
-            _levelSections.Add(new LevelSection(1,0));
-        }
-        
-        foreach (var levelSection in _levelSections)
+        foreach (var levelSection in _activeLevelSections)
         {
             _levelSectionWidgets[levelSection.Level-1].TryActivate(levelSection.HighScore);
         }

@@ -20,7 +20,7 @@ public class ScrollableArea : MonoBehaviour
 
     private void OnSectionsAdded(int sectionWidgetCount)
     {
-        _scrollLimit = sectionWidgetCount * 1f;
+        _scrollLimit = sectionWidgetCount * 1.2f;
     }
 
     private void OnDestroy()

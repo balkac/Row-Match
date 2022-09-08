@@ -24,7 +24,7 @@ public class SaveManager : Singleton<SaveManager>
     
     private int readLevelCount = 0;
     
-    public List<LevelSection> LevelSections = new List<LevelSection>();
+    public List<LevelSection> ActiveLevelSections = new List<LevelSection>();
     
     public Action<bool> OnSaveLoaded;
     
@@ -66,13 +66,13 @@ public class SaveManager : Singleton<SaveManager>
             int lastLevel = PlayerPrefs.GetInt(LAST_PLAYABLE_LEVEL);
             for (int i = 1; i < lastLevel+1; i++)
             {
-                LevelSections.Add(new LevelSection(i, PlayerPrefs.GetInt(LEVEL_HIGH_SCORE + i)));
+                ActiveLevelSections.Add(new LevelSection(i, PlayerPrefs.GetInt(LEVEL_HIGH_SCORE + i)));
             }
         }
         else
         {
             PlayerPrefs.SetInt(LEVEL_HIGH_SCORE + 1, 0);
-            LevelSections.Add(new LevelSection(1, PlayerPrefs.GetInt(LEVEL_HIGH_SCORE + 1)));
+            ActiveLevelSections.Add(new LevelSection(1, PlayerPrefs.GetInt(LEVEL_HIGH_SCORE + 1)));
         }
         OnSaveLoaded?.Invoke(PlayerPrefs.HasKey(IS_HIGH_SCORE));
     }
